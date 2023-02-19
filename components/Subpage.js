@@ -116,7 +116,7 @@ function Subpage({pageId,access_token}) {
       } else if (block.type == "paragraph") {
        
         return (
-          <div className="text-base leading-relaxed md:text-lg lg:text-xl" key={block?.id}>
+          <div className="text-base leading-relaxed md:text-lg lg:text-xl my-3" key={block?.id}>
             {block?.paragraph?.rich_text.map((item) => item?.text?.content)}
           </div>
         );

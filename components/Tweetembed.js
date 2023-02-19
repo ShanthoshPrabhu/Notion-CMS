@@ -6,10 +6,10 @@ export function Tweetembed({tweet}) {
     // const tweetsplit = tweet.split('/')[5];
     const tweetId = tweet[5].split('?')[0];
   return (
-    <div className=' flex justify-center '>
+    <div className=' w-[100%] my-8'>
         <TwitterTweetEmbed
         tweetId={tweetId}
-        options={{ width:'full' }}
+        options={{ width:'100%' }}
         />
     </div>
     
