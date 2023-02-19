@@ -408,7 +408,7 @@ useEffect(()=>{
                           // <a href={`https://api.notion.com/v1/oauth/authorize?client_id=d548655f-7faa-40a9-9503-9954997a4a7c&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fnotion%2Fcallback`}>Go to my notion page</a>
                           <span className=" opacity-95">You have authorized already</span>
                         ) : (
-                          <a href={`https://api.notion.com/v1/oauth/authorize?client_id=d548655f-7faa-40a9-9503-9954997a4a7c&response_type=code&owner=user&redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fauth%2Fnotion%2Fcallback`}>Go to my notion page</a>
+                          <a href={`https://api.notion.com/v1/oauth/authorize?client_id=d548655f-7faa-40a9-9503-9954997a4a7c&response_type=code&owner=user&redirect_uri=https%3A%2F%2Fnotion-cms-jade.vercel.app%2Fauth%2Fcallback%2Fnotion`}>Go to my notion page</a>
                         )}
                        </div>
                       </div>
