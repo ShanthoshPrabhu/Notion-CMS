@@ -34,8 +34,8 @@ const {data:session} = useSession();
 
   // const [docExists]
   
-  console.log('blogs',blogs)
-  console.log('pages',pages)
+  // console.log('blogs',blogs)
+  // console.log('pages',pages)
 //   const [user,setUser] = useState([])
 // console.log('user',user)
 // console.log('sess',session)
@@ -59,10 +59,7 @@ if(user?.pages?.length > 0 && pages.length === 0){
 if(user?.blogs?.length > 0 && blogs.length === 0){
   getUserBlogs();
 }
-// useEffect(()=>{
-  
-//   getUserPages();
-//   },[])
+
   async function getNames(){
     const pageRef = collection(db, "pages");
     const value=[]
@@ -74,30 +71,9 @@ if(user?.blogs?.length > 0 && blogs.length === 0){
     
    }
 
-  // async function (){
-  //   onSnapshot(
-  //     query(
-  //       collection(db, "pages"),
-  //       orderBy("timestamp", "desc")
-  //     ),
-  //     (snapshot) => setDocNames(snapshot.docs)
-  //   )
-  // }
 
   async function getUserPages(){
     if(!session) return
-    // console.log('sesss',session)
-    // const ref = collection(db, "users",session?.user?.email, "pages")
-    // let array = []
-    // getDocs(ref).then((snapshot)=>{
-    //   snapshot.docs.forEach((doc)=>{
-    //     array.push({...doc.data()})
-    //   })
-    // })
-    // console.log(array)
-    // if(array.length >0){
-    //   return setPages(array)
-    // }
     onSnapshot(
       query(
         collection(db, "users",session?.user?.email, "pages"),
@@ -109,17 +85,6 @@ if(user?.blogs?.length > 0 && blogs.length === 0){
  
   async function getUserBlogs(){
     if(!session) return
-    // const ref = collection(db, "users",session?.user?.email, "blogs")
-    // let array = []
-    // getDocs(ref).then((snapshot)=>{
-    //   snapshot.docs.forEach((doc)=>{
-    //     array.push({...doc.data()})
-    //   })
-    // })
-    // console.log(array)
-    // if(array.length >0){
-    //   return setBlogs(array)
-    // }
     onSnapshot(
       query(
         collection(db, "users",session?.user?.email, "blogs"),
@@ -161,9 +126,7 @@ if(user?.blogs?.length > 0 && blogs.length === 0){
  async function validatePageUrl() {
   setUrlError(false)
     const path = pageUrl.split("/")[3];
-    // console.log('path',path)
-    // console.log('path?.split("-")',path?.split("-").length)
-    // console.log('path?.split("?")',path?.split("?").length)
+    
     if (path?.split("-") && path?.split("-").length > 1) {
       const length = path.split('-').length
       console.log('length',length)
