@@ -3,7 +3,7 @@ import { Fragment, useState } from "react";
 import axios from "axios";
 import { useRouter } from "next/router";
 import Navbar from "../components/Navbar";
-import { collection, getDocs, query, where , doc, setDoc, serverTimestamp, onSnapshot, getDoc, addDoc, orderBy } from "firebase/firestore";
+import { collection, getDocs, query, where , doc, setDoc, serverTimestamp, onSnapshot, getDoc, addDoc, orderBy, arrayUnion, updateDoc } from "firebase/firestore";
 import { db } from "../firebase";
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
@@ -29,11 +29,13 @@ const {data:session} = useSession();
   const [pages,setPages]=useState([]);
   const [loading,setLoading]=useState(false)
   const [docNames,setDocNames]=useState([]);
-  const [nameError,setNameError]=useState(false)
+  const [nameError,setNameError]=useState(false);
+  const [urlError,setUrlError]=useState(false);
+
   // const [docExists]
   
-  // console.log('blogs',blogs)
-  // console.log('pages',pages)
+  console.log('blogs',blogs)
+  console.log('pages',pages)
 //   const [user,setUser] = useState([])
 // console.log('user',user)
 // console.log('sess',session)
@@ -49,11 +51,18 @@ async function getUser(){
 if(session && user.length === 0){
   getUser()
 }
-useEffect(()=>{
-  if(!session) return
+console.log('user?.pages.length > 0  && pages.length === 0',user?.pages?.length > 0 && pages.length === 0)
+// if(user?.pages.length > 0 )
+if(user?.pages?.length > 0 && pages.length === 0){
+  getUserPages()
+}
+if(user?.blogs?.length > 0 && blogs.length === 0){
   getUserBlogs();
-  getUserPages();
-  },[])
+}
+// useEffect(()=>{
+  
+//   getUserPages();
+//   },[])
   async function getNames(){
     const pageRef = collection(db, "pages");
     const value=[]
@@ -76,6 +85,19 @@ useEffect(()=>{
   // }
 
   async function getUserPages(){
+    if(!session) return
+    // console.log('sesss',session)
+    // const ref = collection(db, "users",session?.user?.email, "pages")
+    // let array = []
+    // getDocs(ref).then((snapshot)=>{
+    //   snapshot.docs.forEach((doc)=>{
+    //     array.push({...doc.data()})
+    //   })
+    // })
+    // console.log(array)
+    // if(array.length >0){
+    //   return setPages(array)
+    // }
     onSnapshot(
       query(
         collection(db, "users",session?.user?.email, "pages"),
@@ -86,6 +108,18 @@ useEffect(()=>{
   }
  
   async function getUserBlogs(){
+    if(!session) return
+    // const ref = collection(db, "users",session?.user?.email, "blogs")
+    // let array = []
+    // getDocs(ref).then((snapshot)=>{
+    //   snapshot.docs.forEach((doc)=>{
+    //     array.push({...doc.data()})
+    //   })
+    // })
+    // console.log(array)
+    // if(array.length >0){
+    //   return setBlogs(array)
+    // }
     onSnapshot(
       query(
         collection(db, "users",session?.user?.email, "blogs"),
@@ -115,6 +149,7 @@ useEffect(()=>{
 
   function closeAll() {
     setIsOpen(false);
+    setUrlError(false)
     setNameError(false)
     setSubModalIsOpen(false);
   }
@@ -122,15 +157,21 @@ useEffect(()=>{
   return <Loader/>
  }
 
+
  async function validatePageUrl() {
-  setLoading(true)
+  setUrlError(false)
     const path = pageUrl.split("/")[3];
-    console.log(path);
-    if (path?.split("-")) {
+    // console.log('path',path)
+    // console.log('path?.split("-")',path?.split("-").length)
+    // console.log('path?.split("?")',path?.split("?").length)
+    if (path?.split("-") && path?.split("-").length > 1) {
       const length = path.split('-').length
       console.log('length',length)
       const Id = path?.split("-")[length -1];
       console.log("pageid", Id);
+      if(Id?.length != 32){
+        return setUrlError(true)
+      }
       console.log(Id?.length == 32);
       const docRef = doc(db, "pages", pageName + '.page');
       const docSnap = await getDoc(docRef);
@@ -155,7 +196,11 @@ useEffect(()=>{
           pageId:Id,
           token:user?.access_token
         });
+        if(!pdata){
+          return setUrlError(true)
+        }
         if(pdata){
+          setLoading(true)
           await addDoc(collection(db, "users", session.user.email, "pages"), {
             access_token:user?.access_token,
             owner:user?.email,
@@ -165,6 +210,11 @@ useEffect(()=>{
             pageUrl:pageUrl,
             timestamp: serverTimestamp(),
           });
+          const Ref = doc(db, "users", session?.user?.email)
+          const data = {
+          pages:arrayUnion(pageName)
+          }
+        await updateDoc(Ref,data);
           await setDoc(doc(db, "pages",pageName + '.page'), {
             access_token:user?.access_token,
             owner:user?.email,
@@ -175,7 +225,7 @@ useEffect(()=>{
             timestamp: serverTimestamp(),
           });
           router.push(`/page/${pageName}.page`)
-          setLoading(false)
+          setUrlError(false)
          
           console.log('sucesssssspage')
         }
@@ -185,6 +235,10 @@ useEffect(()=>{
     if (path?.split("?")) {
       const Id = path.split("?")[0];
       console.log('blogid',Id);
+      console.log('Id?.length',Id?.length)
+      if(Id?.length != 32){
+        return setUrlError(true)
+      }
       const docRef = doc(db, "blogs", pageName + '.blog');
       const docSnap = await getDoc(docRef);
       console.log('docSnap',docSnap.data())
@@ -198,7 +252,13 @@ useEffect(()=>{
             databaseId:Id,
             token:user?.access_token
           });
+          console.log(data)
+          if(!data){
+            return setUrlError(true)
+          }
        if(data){
+        setUrlError(false)
+        setLoading(true)
         await addDoc(collection(db, "users", session.user.email, "blogs"), {
           access_token:user?.access_token,
           owner:user?.email,
@@ -208,6 +268,11 @@ useEffect(()=>{
           blogUrl:pageUrl,
           timestamp: serverTimestamp(),
         });
+        const Ref = doc(db, "users", session?.user?.email)
+        const data = {
+         blogs:arrayUnion(pageName)
+        }
+        await updateDoc(Ref,data);
         await setDoc(doc(db, "blogs",pageName + '.blog' ), {
           access_token:user?.access_token,
           owner:user?.email,
@@ -218,7 +283,7 @@ useEffect(()=>{
           timestamp: serverTimestamp(),
         });
         router.push(`/${pageName}.blog`)
-        setLoading(false)
+        setUrlError(false)
         
        }
         console.log('sucessssssdb')
@@ -256,6 +321,7 @@ useEffect(()=>{
           Create New site
         </button> 
       </div>
+      <div className="bg-[#EDECE9] mx-7 rounded-md">
       <div className=" min-h-40 bg-[#EDECE9] m-5 rounded-lg pb-4">
          <div className=' p-3 '>
             <div className=' text-base flex justify-center font-semibold'>Blogs</div>
@@ -297,6 +363,7 @@ useEffect(()=>{
           </div>
          ))}
 
+      </div>
       </div>
       <Footer/>
       <div className="w-4/5 mx-auto 2xl:w-5/6 xl:w-4/6">
@@ -438,6 +505,7 @@ useEffect(()=>{
                           placeholder=""
                         />
                       </div>
+                      {urlError ? ( <div className=" text-red-500 text-sm">Check whether you have provided the correct URL of your notion page</div>) : null}
                     </div>
                     <div className="flex justify-center mt-10">
                       <button

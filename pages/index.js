@@ -22,13 +22,13 @@ function Home({providers}) {
     return getUser()
    
   }
-console.log('user',user)
+// console.log('user',user)
 async function getUser(){
   const docRef = doc(db, "users", session?.user?.email);
   const docSnap = await getDoc(docRef);
   console.log('data', docSnap.data())
   if (docSnap.exists()) {
-    console.log("Document data:", docSnap.data());
+    // console.log("Document data:", docSnap.data());
     return setUser(docSnap.data())
   } else {
     return createUser()

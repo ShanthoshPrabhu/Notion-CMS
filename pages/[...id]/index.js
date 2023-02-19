@@ -8,6 +8,7 @@ import { db } from "../../firebase";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import Subpage from "../../components/Subpage";
+import Loader from "../../components/Loader";
 
 export const Text = ({ text }) => {
   if (!text) {
@@ -51,9 +52,11 @@ function Databasepage() {
   const databaseId = router.query.id[0]
   const [blogData,setBlogData]=useState([])
 //   console.log('router',router)
-//   console.log('posts',posts)
+//  if(posts)
+
   const data = []
 //  console.log('databaseId',databaseId)
+// console.log(first)
   useEffect(()=>{
    getData()
   },[])
@@ -63,13 +66,16 @@ function Databasepage() {
     checkData()
   },[blogData])
   async function getData(){
+   
     const docRef = doc(db, "blogs", databaseId);
     const docSnap = await getDoc(docRef);
-    console.log('docsnap',docSnap.data())
+    // console.log('docsnap',docSnap.data())
     // setBlogData(docSnap.data())
     setBlogData(docSnap.data())
     //  console.log('val',data)
   }
+  // console.log('blogdata',blogData)
+
   if(router.query.id.length <3 && router.query.id.length >1 && blogData.length != 0){
     return <Subpage pageId={router.query.id[1]} access_token={blogData?.access_token}/>
  }
