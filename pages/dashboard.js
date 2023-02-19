@@ -123,7 +123,7 @@ useEffect(()=>{
  }
 
  async function validatePageUrl() {
-  // setLoading(true)
+  setLoading(true)
     const path = pageUrl.split("/")[3];
     console.log(path);
     if (path?.split("-")) {
