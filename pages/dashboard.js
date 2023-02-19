@@ -141,90 +141,90 @@ useEffect(()=>{
       if(Id?.length == 32 && !docSnap.data() ){
         setNameError(false)
         console.log('succs')
-        // await setDoc(doc(db, "pages",pageName + '.page'), {
-        //   access_token:user?.access_token,
-        //   owner:user?.email,
-        //   page:pageName + '.page',
-        //   pageId:Id,
-        //   pagename:pageName,
-        //   pageUrl:pageUrl,
-        //   timestamp: serverTimestamp(),
-        // });
-        // const pdata = await axios.post(`/api/notion`,
-        // {
-        //   pageId:Id,
-        //   token:user?.access_token
-        // });
-        // if(pdata){
-        //   await addDoc(collection(db, "users", session.user.email, "pages"), {
-        //     access_token:user?.access_token,
-        //     owner:user?.email,
-        //     page:pageName + '.page' ,
-        //     pageId:Id,
-        //     pagename:pageName,
-        //     pageUrl:pageUrl,
-        //     timestamp: serverTimestamp(),
-        //   });
-        //   await setDoc(doc(db, "pages",pageName + '.page'), {
-        //     access_token:user?.access_token,
-        //     owner:user?.email,
-        //     page:pageName + '.page',
-        //     pageId:Id,
-        //     pagename:pageName,
-        //     pageUrl:pageUrl,
-        //     timestamp: serverTimestamp(),
-        //   });
-        //   router.push(`/page/${pageName}.page`)
-        //   setLoading(false)
+        await setDoc(doc(db, "pages",pageName + '.page'), {
+          access_token:user?.access_token,
+          owner:user?.email,
+          page:pageName + '.page',
+          pageId:Id,
+          pagename:pageName,
+          pageUrl:pageUrl,
+          timestamp: serverTimestamp(),
+        });
+        const pdata = await axios.post(`/api/notion`,
+        {
+          pageId:Id,
+          token:user?.access_token
+        });
+        if(pdata){
+          await addDoc(collection(db, "users", session.user.email, "pages"), {
+            access_token:user?.access_token,
+            owner:user?.email,
+            page:pageName + '.page' ,
+            pageId:Id,
+            pagename:pageName,
+            pageUrl:pageUrl,
+            timestamp: serverTimestamp(),
+          });
+          await setDoc(doc(db, "pages",pageName + '.page'), {
+            access_token:user?.access_token,
+            owner:user?.email,
+            page:pageName + '.page',
+            pageId:Id,
+            pagename:pageName,
+            pageUrl:pageUrl,
+            timestamp: serverTimestamp(),
+          });
+          router.push(`/page/${pageName}.page`)
+          setLoading(false)
          
-        //   console.log('sucesssssspage')
-        // }
+          console.log('sucesssssspage')
+        }
       }
 
     }
-    // if (path?.split("?")) {
-    //   const Id = path.split("?")[0];
-    //   console.log('blogid',Id);
-    //   const docRef = doc(db, "blogs", pageName + '.blog');
-    //   const docSnap = await getDoc(docRef);
-    //   console.log('docSnap',docSnap.data())
-    //   if(docSnap.data()){
-    //     return setNameError(true)
-    //   }
-    //   if(Id?.length == 32 && !docSnap.data()){
-    //     setNameError(false)
-    //     const data = await axios.post(`/api/notion`,
-    //       {
-    //         databaseId:Id,
-    //         token:user?.access_token
-    //       });
-    //    if(data){
-    //     await addDoc(collection(db, "users", session.user.email, "blogs"), {
-    //       access_token:user?.access_token,
-    //       owner:user?.email,
-    //       blog:pageName + '.blog',
-    //       blogId:Id,
-    //       blogname:pageName,
-    //       blogUrl:pageUrl,
-    //       timestamp: serverTimestamp(),
-    //     });
-    //     await setDoc(doc(db, "blogs",pageName + '.blog' ), {
-    //       access_token:user?.access_token,
-    //       owner:user?.email,
-    //       blog:pageName + '.blog' ,
-    //       blogId:Id,
-    //       blogname:pageName,
-    //       blogUrl:pageUrl,
-    //       timestamp: serverTimestamp(),
-    //     });
-    //     router.push(`/${pageName}.blog`)
-    //     setLoading(false)
+    if (path?.split("?")) {
+      const Id = path.split("?")[0];
+      console.log('blogid',Id);
+      const docRef = doc(db, "blogs", pageName + '.blog');
+      const docSnap = await getDoc(docRef);
+      console.log('docSnap',docSnap.data())
+      if(docSnap.data()){
+        return setNameError(true)
+      }
+      if(Id?.length == 32 && !docSnap.data()){
+        setNameError(false)
+        const data = await axios.post(`/api/notion`,
+          {
+            databaseId:Id,
+            token:user?.access_token
+          });
+       if(data){
+        await addDoc(collection(db, "users", session.user.email, "blogs"), {
+          access_token:user?.access_token,
+          owner:user?.email,
+          blog:pageName + '.blog',
+          blogId:Id,
+          blogname:pageName,
+          blogUrl:pageUrl,
+          timestamp: serverTimestamp(),
+        });
+        await setDoc(doc(db, "blogs",pageName + '.blog' ), {
+          access_token:user?.access_token,
+          owner:user?.email,
+          blog:pageName + '.blog' ,
+          blogId:Id,
+          blogname:pageName,
+          blogUrl:pageUrl,
+          timestamp: serverTimestamp(),
+        });
+        router.push(`/${pageName}.blog`)
+        setLoading(false)
         
-    //    }
-    //     console.log('sucessssssdb')
-    //   }
+       }
+        console.log('sucessssssdb')
+      }
      
-    // }
+    }
   }
  
   
@@ -256,7 +256,7 @@ useEffect(()=>{
           Create New site
         </button> 
       </div>
-      <div className=" min-h-40 ">
+      <div className=" min-h-40 bg-[#EDECE9] m-5 rounded-lg pb-4">
          <div className=' p-3 '>
             <div className=' text-base flex justify-center font-semibold'>Blogs</div>
             <div className=' flex text-xs space-x-6 md:text-sm mt-3 lg:text-base justify-around'>
@@ -275,7 +275,7 @@ useEffect(()=>{
          ))}
 
       </div>
-      <div className=" min-h-40 ">
+      <div className=" min-h-40 bg-[#EDECE9] m-5 rounded-lg pb-4">
         
           <div className=" " >
              <div className=' p-3 '>

@@ -6,7 +6,7 @@ function Blogs({data}) {
    <div className=' flex items-center justify-around text-xs md:text-sm lg:text-base'>
      <div>{data.owner}</div>
      <div>
-        <a href={`http://localhost:3000/${data.blog}`} className='cursor-pointer'>{data.blog}</a>
+        <a href={`https://notion-cms-jade.vercel.app/${data.blog}`} className='cursor-pointer'>{data.blog}</a>
      </div>
    </div>
   )
