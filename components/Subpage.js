@@ -132,7 +132,7 @@ function Subpage({pageId,access_token}) {
         );
       } 
       else if (block?.type == "toggle") {
-        return <Toggle block={block} child={child}/>
+        return <Toggle block={block} child={child} key={block.id}/>
       } 
       else if (block.type == "to_do") {
         // const [colorToDo, setColorToDo] = useState(

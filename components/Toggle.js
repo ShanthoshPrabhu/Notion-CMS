@@ -2,12 +2,12 @@ import React, { useState } from 'react'
 
 function Toggle({block,child}) {
     const [isToggled, setIsToggled] = useState(false);
-    const mainval = block?.toggle?.rich_text.map((val) => {
-      return <div>{val?.plain_text}</div>;
+    const mainval = block?.toggle?.rich_text.map((val,i) => {
+      return <div key={i}>{val?.plain_text}</div>;
     });
     let newArray = [];
 
-    const togggle = child?.map((value) => {
+    const togggle = child?.map((value,i) => {
       if (value?.parent?.block_id === block?.id) {
         {
           value?.paragraph.rich_text.map((val) => {
@@ -36,9 +36,9 @@ function Toggle({block,child}) {
         </div>
         {isToggled && (
           <div className="mt-2 text-base ml-7">
-            {newArray?.map((val) => {
+            {newArray?.map((val,i) => {
               return (
-                <div className="my-2 text-gray-700">
+                <div className="my-2 text-gray-700" key={i}>
                   {val?.text.link == null ? (
                     val?.text.content
                   ) : (
